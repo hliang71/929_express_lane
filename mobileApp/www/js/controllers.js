@@ -50,6 +50,13 @@ angular.module('controllers', [])
     }
   })
 
-  .controller('HomeCtrl', function() {
-
+  .controller('HomeCtrl', function($scope) {
+    $scope.playlists = [
+      { title: 'Parking', id: 1 },
+      { title: 'Shopping', id: 2 },
+      { title: 'Game', id: 3 },
+      { title: 'Movie', id: 4 },
+      { title: 'Social Life', id: 5 },
+      { title: 'Leaning', id: 6 }
+    ];
   });
