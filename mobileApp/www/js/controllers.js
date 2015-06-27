@@ -63,35 +63,60 @@ angular.module('controllers', [])
 
   .controller('MapCtrl', function($scope, $ionicLoading, $compile) {
     function initialize() {
-      var myLatlng = new google.maps.LatLng(37.7736536,-122.4401971);
-
-      var mapOptions = {
-        center: myLatlng,
+      var map_options = {
+        center: new google.maps.LatLng(37.78621,-122.4209302),
         zoom: 14,
         mapTypeId: google.maps.MapTypeId.ROADMAP
       };
-      var map = new google.maps.Map(document.getElementById("map"),
-        mapOptions);
 
-      //Marker + infowindow + angularjs compiled ng-click
-      var contentString = "<div><a ng-click='clickTest()'>one available parking space</a></div>";
-      var compiled = $compile(contentString)($scope);
+      var google_map = new google.maps.Map(document.getElementById("map"), map_options);
 
-      var infowindow = new google.maps.InfoWindow({
-        content: compiled[0]
+      var info_window = new google.maps.InfoWindow({
+        content: 'loading'
       });
 
-      var marker = new google.maps.Marker({
-        position: myLatlng,
-        map: map,
-        title: 'Uluru (Ayers Rock)'
-      });
+      var t = [];
+      var x = [];
+      var y = [];
+      var h = [];
 
-      google.maps.event.addListener(marker, 'click', function() {
-        infowindow.open(map,marker);
-      });
+      t.push('Location Name 1');
+      x.push(37.78621);
+      y.push(-122.4109302);
+      h.push('<p><strong>Parking Location1</strong><br/>Address 1</p>');
 
-      $scope.map = map;
+      t.push('Location Name 2');
+      x.push(37.7866848);
+      y.push(-122.4094282);
+      h.push('<p><strong>Parking Location 2</strong><br/>Address 2</p>');
+
+      t.push('Location Name 2');
+      x.push(37.7872275);
+      y.push(-122.423883);
+      h.push('<p><strong>Parking Location 3</strong><br/>Address 3</p>');
+
+      t.push('Location Name 2');
+      x.push(37.7830897);
+      y.push(-122.4233251);
+      h.push('<p><strong>Parking Location 4</strong><br/>Address 4</p>');
+
+      var i = 0;
+      for ( item in t ) {
+        var m = new google.maps.Marker({
+          map:       google_map,
+          animation: google.maps.Animation.DROP,
+          title:     t[i],
+          position:  new google.maps.LatLng(x[i],y[i]),
+          html:      h[i]
+        });
+
+        google.maps.event.addListener(m, 'click', function() {
+          info_window.setContent(this.html);
+          info_window.open(google_map, this);
+        });
+        i++;
+      }
+
     }
     google.maps.event.addDomListener(window, 'load', initialize());
 
