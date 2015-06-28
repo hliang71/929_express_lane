@@ -64,6 +64,15 @@ angular.module('mobileApp', ['ionic', 'controllers'])
           controller: 'ProfileCtrl'
         }
       }
+    })
+    .state('app.settings', {
+      url: "/settings",
+      views: {
+        'menuContent': {
+          templateUrl: "templates/settings.html",
+          controller: 'SettingsCtrl'
+        }
+      }
     });
       /*
     .state('app.playlists', {

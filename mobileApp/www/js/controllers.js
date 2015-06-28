@@ -54,6 +54,10 @@ angular.module('controllers', [])
 
   })
 
+  .controller('SettingsCtrl', function($scope) {
+
+  })
+
   .controller('HomeCtrl', function($scope) {
     $scope.playlists = [
       { title: 'Parking', id: 1 },
