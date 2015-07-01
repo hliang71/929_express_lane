@@ -70,63 +70,80 @@ angular.module('controllers', [])
   })
 
   .controller('MapCtrl', function($scope, $ionicLoading, $compile) {
-    function initialize() {
-      var map_options = {
-        center: new google.maps.LatLng(37.78621,-122.4209302),
-        zoom: 14,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
+    var map_options = {
+      center: new google.maps.LatLng(37.78621,-122.4209302),
+      zoom: 14,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
 
-      var google_map = new google.maps.Map(document.getElementById("map"), map_options);
+    var google_map = new google.maps.Map(document.getElementById("map"), map_options);
 
-      var info_window = new google.maps.InfoWindow({
-        content: 'loading'
+    var info_window = new google.maps.InfoWindow({
+      content: 'loading'
+    });
+
+    var t = [];
+    var x = [];
+    var y = [];
+    var h = [];
+
+    t.push('Location Name 1');
+    x.push(37.78621);
+    y.push(-122.4109302);
+    h.push('<p><strong>Parking Location1</strong><br/>Address 1</p>');
+
+    t.push('Location Name 2');
+    x.push(37.7866848);
+    y.push(-122.4094282);
+    h.push('<p><strong>Parking Location 2</strong><br/>Address 2</p>');
+
+    t.push('Location Name 2');
+    x.push(37.7872275);
+    y.push(-122.423883);
+    h.push('<p><strong>Parking Location 3</strong><br/>Address 3</p>');
+
+    t.push('Location Name 2');
+    x.push(37.7830897);
+    y.push(-122.4233251);
+    h.push('<p><strong>Parking Location 4</strong><br/>Address 4</p>');
+
+    var i = 0;
+    for ( item in t ) {
+      var m = new google.maps.Marker({
+        map:       google_map,
+        animation: google.maps.Animation.DROP,
+        title:     t[i],
+        position:  new google.maps.LatLng(x[i],y[i]),
+        html:      h[i]
       });
 
-      var t = [];
-      var x = [];
-      var y = [];
-      var h = [];
-
-      t.push('Location Name 1');
-      x.push(37.78621);
-      y.push(-122.4109302);
-      h.push('<p><strong>Parking Location1</strong><br/>Address 1</p>');
-
-      t.push('Location Name 2');
-      x.push(37.7866848);
-      y.push(-122.4094282);
-      h.push('<p><strong>Parking Location 2</strong><br/>Address 2</p>');
-
-      t.push('Location Name 2');
-      x.push(37.7872275);
-      y.push(-122.423883);
-      h.push('<p><strong>Parking Location 3</strong><br/>Address 3</p>');
-
-      t.push('Location Name 2');
-      x.push(37.7830897);
-      y.push(-122.4233251);
-      h.push('<p><strong>Parking Location 4</strong><br/>Address 4</p>');
-
-      var i = 0;
-      for ( item in t ) {
-        var m = new google.maps.Marker({
-          map:       google_map,
-          animation: google.maps.Animation.DROP,
-          title:     t[i],
-          position:  new google.maps.LatLng(x[i],y[i]),
-          html:      h[i]
-        });
-
-        google.maps.event.addListener(m, 'click', function() {
-          info_window.setContent(this.html);
-          info_window.open(google_map, this);
-        });
-        i++;
-      }
-
+      google.maps.event.addListener(m, 'click', function() {
+        info_window.setContent(this.html);
+        info_window.open(google_map, this);
+      });
+      i++;
     }
-    google.maps.event.addDomListener(window, 'load', initialize());
+
+    var x = 37.78721;
+    var y = -122.4109302;
+    $scope.addMarker = function() {
+      console.log('in the function addMarker');
+      var m = new google.maps.Marker({
+        map:       google_map,
+        animation: google.maps.Animation.DROP,
+        title:     'Location Name 2',
+        position:  new google.maps.LatLng(x, y),
+        html:      '<p><strong>Parking Location 4</strong><br/>Address 4</p>'
+      });
+      google.maps.event.addListener(m, 'click', function() {
+        info_window.setContent(this.html);
+        info_window.open(google_map, this);
+      });
+      x = x + 0.001;
+      y = y + 0.001;
+    };
+
+    //google.maps.event.addDomListener(window, 'load', initialize());
 
     $scope.centerOnMe = function() {
       if(!$scope.map) {
@@ -149,5 +166,7 @@ angular.module('controllers', [])
     $scope.clickTest = function() {
       alert('Example of infowindow with ng-click')
     };
+
+    window.scope = $scope;
 
   });
