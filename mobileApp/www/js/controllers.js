@@ -75,7 +75,7 @@ angular.module('controllers', [])
       zoom: 14,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-
+    $scope.markers = [];
     var google_map = new google.maps.Map(document.getElementById("map"), map_options);
 
     var info_window = new google.maps.InfoWindow({
@@ -116,7 +116,7 @@ angular.module('controllers', [])
         position:  new google.maps.LatLng(x[i],y[i]),
         html:      h[i]
       });
-
+      $scope.markers.push(m);
       google.maps.event.addListener(m, 'click', function() {
         info_window.setContent(this.html);
         info_window.open(google_map, this);
@@ -139,8 +139,20 @@ angular.module('controllers', [])
         info_window.setContent(this.html);
         info_window.open(google_map, this);
       });
+      $scope.markers.push(m);
       x = x + 0.001;
       y = y + 0.001;
+    };
+
+    var setAllMap = function(map) {
+      for (var i = 0; i < $scope.markers.length; i++) {
+        $scope.markers[i].setMap(map);
+      }
+    }
+
+    $scope.removeMarker = function() {
+      setAllMap(null);
+      $scope.markers = []
     };
 
     //google.maps.event.addDomListener(window, 'load', initialize());
