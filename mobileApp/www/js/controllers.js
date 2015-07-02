@@ -148,11 +148,12 @@ angular.module('controllers', [])
       for (var i = 0; i < $scope.markers.length; i++) {
         $scope.markers[i].setMap(map);
       }
-    }
+    };
 
     $scope.removeMarker = function() {
-      setAllMap(null);
-      $scope.markers = []
+      console.log('removing markers');
+      $scope.markers[0].setMap(null);
+      $scope.markers.splice(0,1);
     };
 
     //google.maps.event.addDomListener(window, 'load', initialize());
