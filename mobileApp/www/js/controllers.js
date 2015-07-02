@@ -82,57 +82,23 @@ angular.module('controllers', [])
       content: 'loading'
     });
 
-    var t = [];
-    var x = [];
-    var y = [];
-    var h = [];
-
-    t.push('Location Name 1');
-    x.push(37.78621);
-    y.push(-122.4109302);
-    h.push('<p><strong>Parking Location1</strong><br/>Address 1</p>');
-
-    t.push('Location Name 2');
-    x.push(37.7866848);
-    y.push(-122.4094282);
-    h.push('<p><strong>Parking Location 2</strong><br/>Address 2</p>');
-
-    t.push('Location Name 2');
-    x.push(37.7872275);
-    y.push(-122.423883);
-    h.push('<p><strong>Parking Location 3</strong><br/>Address 3</p>');
-
-    t.push('Location Name 2');
-    x.push(37.7830897);
-    y.push(-122.4233251);
-    h.push('<p><strong>Parking Location 4</strong><br/>Address 4</p>');
-
-    var i = 0;
-    for ( item in t ) {
-      var m = new google.maps.Marker({
-        map:       google_map,
-        animation: google.maps.Animation.bouce,
-        title:     t[i],
-        position:  new google.maps.LatLng(x[i],y[i]),
-        html:      h[i]
-      });
-      $scope.markers.push(m);
-      google.maps.event.addListener(m, 'click', function() {
-        info_window.setContent(this.html);
-        info_window.open(google_map, this);
-      });
-      i++;
-    }
-
     var x = 37.78721;
     var y = -122.4109302;
     $scope.addMarker = function() {
       console.log('in the function addMarker');
+      var json = {
+        id:123,
+        x: x,
+        y: y,
+        title: 'Location Name 2',
+
+      };
       var m = new google.maps.Marker({
+        id: json.id,
         map:       google_map,
         animation: google.maps.Animation.bouce,
         title:     'Location Name 2',
-        position:  new google.maps.LatLng(x, y),
+        position:  new google.maps.LatLng(json.x, json.y),
         html:      '<p><strong>Parking Location 4</strong><br/>Address 4</p>'
       });
       google.maps.event.addListener(m, 'click', function() {
@@ -155,31 +121,7 @@ angular.module('controllers', [])
       $scope.markers[0].setMap(null);
       $scope.markers.splice(0,1);
     };
-
-    //google.maps.event.addDomListener(window, 'load', initialize());
-
-    $scope.centerOnMe = function() {
-      if(!$scope.map) {
-        return;
-      }
-
-      $scope.loading = $ionicLoading.show({
-        content: 'Getting current location...',
-        showBackdrop: false
-      });
-
-      navigator.geolocation.getCurrentPosition(function(pos) {
-        $scope.map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
-        $scope.loading.hide();
-      }, function(error) {
-        alert('Unable to get location: ' + error.message);
-      });
-    };
-
-    $scope.clickTest = function() {
-      alert('Example of infowindow with ng-click')
-    };
-
+    
     window.scope = $scope;
 
   });
