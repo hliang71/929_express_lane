@@ -70,6 +70,37 @@ angular.module('controllers', [])
   })
 
   .controller('MapCtrl', function($scope, $ionicLoading, $compile) {
+
+     var stompClient = null;
+
+     var setConnected = function(connected) {
+       document.getElementById('connect').disabled = connected;
+       document.getElementById('disconnect').disabled = !connected;
+       document.getElementById('calculationDiv').style.visibility = connected ? 'visible' : 'hidden';
+       document.getElementById('calResponse').innerHTML = '';
+     };
+
+     var connect = function() {
+       var socket = new SockJS('/notification/add');
+       stompClient = Stomp.over(socket);
+       stompClient.connect({}, function(frame) {
+         setConnected(true);
+         console.log('Connected: ' + frame);
+         stompClient.subscribe('/topic/showResult', function(calResult) {
+           console.log(calResult)
+         });
+       });
+     };
+
+     var disconnect = function() {
+       stompClient.disconnect();
+       setConnected(false);
+       console.log("Disconnected");
+     };
+
+    /*-----------------------------------------
+     */
+
     var map_options = {
       center: new google.maps.LatLng(37.78621,-122.4209302),
       zoom: 14,
@@ -121,7 +152,7 @@ angular.module('controllers', [])
       $scope.markers[0].setMap(null);
       $scope.markers.splice(0,1);
     };
-    
+
     window.scope = $scope;
 
   });
