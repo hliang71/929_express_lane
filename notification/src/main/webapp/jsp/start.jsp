@@ -22,8 +22,8 @@
             stompClient.connect({}, function(frame) {
                 setConnected(true);
                 console.log('Connected: ' + frame);
-                stompClient.subscribe('/topic/showResult', function(calResult){
-                	showResult(JSON.parse(calResult.body).result);
+                stompClient.subscribe('/user/topic/showResult', function(calResult){
+                	showResult(JSON.stringify(calResult.body));
                 });
             });
         }

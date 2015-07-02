@@ -15,12 +15,14 @@
  */
 package com.p2p.express.lane.example.service;
 
+import com.p2p.express.lane.example.GeoLocation;
 import com.p2p.express.lane.example.Portfolio;
 import com.p2p.express.lane.example.PortfolioPosition;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.MessageHeaders;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import com.p2p.express.lane.example.service.Trade.TradeAction;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -43,6 +45,9 @@ public class TradeServiceImpl implements TradeService {
 	private final PortfolioService portfolioService;
 
 	private final List<TradeResult> tradeResults = new CopyOnWriteArrayList<>();
+
+	private volatile double x=37.78721;
+	private volatile double y=-122.4109302;
 
 
 	@Autowired
@@ -86,7 +91,20 @@ public class TradeServiceImpl implements TradeService {
 			}
 		}
 	}
+	@Scheduled(fixedDelay=1500)
+	public void sendGeoNotifications() {
 
+		Map<String, Object> map = new HashMap<>();
+		map.put(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON);
+		GeoLocation loc = new GeoLocation();
+		loc.setId("120");
+		x += 0.01;
+		y += 0.01;
+		loc.setPositon_x(x);
+		loc.setPosition_y(y);
+		this.messagingTemplate.convertAndSendToUser("fabrice", "/topic/showResult", loc, map);
+
+	}
 
 	private static class TradeResult {
 
