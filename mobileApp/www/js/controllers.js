@@ -111,7 +111,7 @@ angular.module('controllers', [])
     for ( item in t ) {
       var m = new google.maps.Marker({
         map:       google_map,
-        animation: google.maps.Animation.DROP,
+        animation: google.maps.Animation.bouce,
         title:     t[i],
         position:  new google.maps.LatLng(x[i],y[i]),
         html:      h[i]
@@ -130,7 +130,7 @@ angular.module('controllers', [])
       console.log('in the function addMarker');
       var m = new google.maps.Marker({
         map:       google_map,
-        animation: google.maps.Animation.DROP,
+        animation: google.maps.Animation.bouce,
         title:     'Location Name 2',
         position:  new google.maps.LatLng(x, y),
         html:      '<p><strong>Parking Location 4</strong><br/>Address 4</p>'
