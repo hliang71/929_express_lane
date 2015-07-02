@@ -29,14 +29,7 @@
     <!--<logger name="org.springframework.security">-->
         <!--<level value="info" />-->
     <!--</logger>-->
-
-    <logger name="org.springframework.samples.portfolio.web.load.WebSocketMessageBrokerStatsMonitor">
-        <level value="debug" />
-    </logger>
-
-    <logger name="org.springframework.samples.portfolio.web.load">
-        <level value="debug" />
-    </logger>
+	
 
     <logger name="org.eclipse.jetty">
         <level value="error" />

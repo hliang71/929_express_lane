@@ -30,14 +30,6 @@
         <level value="info" />
     </logger>
 
-    <logger name="org.springframework.samples.portfolio.web.support.WebSocketMessageBrokerMonitor">
-        <level value="debug" />
-    </logger>
-
-    <logger name="org.springframework.samples.portfolio.web.load">
-        <level value="debug" />
-    </logger>
-
     <root>
 		<priority value="warn" />
 		<appender-ref ref="console" />
