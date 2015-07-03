@@ -102,7 +102,7 @@ public class TradeServiceImpl implements TradeService {
 		y += 0.01;
 		loc.setPositon_x(x);
 		loc.setPosition_y(y);
-		this.messagingTemplate.convertAndSendToUser("fabrice", "/topic/showResult", loc, map);
+		this.messagingTemplate.convertAndSend("/topic/showResult", loc, map);
 
 	}
 
