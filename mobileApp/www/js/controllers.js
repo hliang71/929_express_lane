@@ -81,12 +81,12 @@ angular.module('controllers', [])
      };
 
      var connect = function() {
-       var socket = new SockJS('/notification/add');
+       var socket = new SockJS('http://localhost:8080/notification/add');
        stompClient = Stomp.over(socket);
        stompClient.connect({}, function(frame) {
          setConnected(true);
          console.log('Connected: ' + frame);
-         stompClient.subscribe('/topic/showResult', function(calResult) {
+         stompClient.subscribe('/user/topic/showResult', function(calResult) {
            console.log(calResult)
          });
        });
@@ -100,6 +100,8 @@ angular.module('controllers', [])
 
     /*-----------------------------------------
      */
+
+    connect();
 
     var map_options = {
       center: new google.maps.LatLng(37.78621,-122.4209302),
