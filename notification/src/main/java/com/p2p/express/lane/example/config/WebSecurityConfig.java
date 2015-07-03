@@ -21,8 +21,12 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.header.Header;
 import org.springframework.security.web.header.writers.frameoptions.AllowFromStrategy;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Customizes Spring Security configuration.
@@ -42,6 +46,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
 	public CORSHeaderWriter cORSHeaderWriter() {
+		/**List<Header> headers = new ArrayList<Header>();
+		Header header = new Header("Access-Control-Allow-Methods",  new String[]{"POST", "GET", "OPTIONS"});
+		Header header2 = new Header("Access-Control-Allow-Origin",  new String[]{"*"});
+		headers.add(header);
+		headers.add(header2);
+		return new CORSHeaderWriter(headers);*/
 		return new CORSHeaderWriter();
 	}
 
@@ -53,9 +63,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 			// See https://jira.springsource.org/browse/SPR-11496
 			.headers().addHeaderWriter(
-				new XFrameOptionsHeaderWriter(
-						XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)).
-				addHeaderWriter(cORSHeaderWriter()).and()
+				new XFrameOptionsHeaderWriter(expressLaneAllowFromStrategy()
+						)).addHeaderWriter(cORSHeaderWriter())
+				.and()
 
 			.formLogin()
 				.defaultSuccessUrl("/index.html")
@@ -69,7 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
 				.and()
 			.authorizeRequests()
-				.antMatchers("/assets/**").permitAll()
+				.antMatchers("/**/**").permitAll()
 				.anyRequest().authenticated()
 				.and();
 	}
