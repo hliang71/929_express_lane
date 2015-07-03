@@ -17,7 +17,7 @@
         }
 
         function connect() {
-            var socket = new SockJS('/notification/add');
+            var socket = new SockJS('http://localhost:8080/notification/add');
 			stompClient = Stomp.over(socket);
             stompClient.connect({}, function(frame) {
                 setConnected(true);

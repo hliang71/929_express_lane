@@ -15,11 +15,13 @@
  */
 package com.p2p.express.lane.example.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.header.writers.frameoptions.AllowFromStrategy;
 import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 
 /**
@@ -29,12 +31,19 @@ import org.springframework.security.web.header.writers.frameoptions.XFrameOption
  */
 @EnableWebSecurity
 @Configuration
+
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	//@Autowired
 	//private UserRepository userRepo;
+	@Bean
+	public AllowFromStrategy expressLaneAllowFromStrategy() {
+		return new ExpressLaneAllowFromStrategy();
+	}
 
-
-
+    @Bean
+	public CORSHeaderWriter cORSHeaderWriter() {
+		return new CORSHeaderWriter();
+	}
 
 
 	@Override
@@ -45,7 +54,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			// See https://jira.springsource.org/browse/SPR-11496
 			.headers().addHeaderWriter(
 				new XFrameOptionsHeaderWriter(
-						XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)).and()
+						XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)).
+				addHeaderWriter(cORSHeaderWriter()).and()
 
 			.formLogin()
 				.defaultSuccessUrl("/index.html")
