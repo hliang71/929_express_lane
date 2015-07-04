@@ -7,7 +7,7 @@
     <script src="<c:url value='/assets/lib/stomp/lib/stomp.min.js'/> "></script>
     <script type="text/javascript">
 	
-        var stompClient = null; 
+        var stompClient = null;
 
         function setConnected(connected) {
             document.getElementById('connect').disabled = connected;
@@ -21,7 +21,15 @@
 			stompClient = Stomp.over(socket);
             stompClient.connect({}, function(frame) {
                 setConnected(true);
-                console.log('Connected: ' + frame);
+                console.log('Connected: ' + reply_To);
+                var token = 'abc1234';
+                var reply_To = '/queue/response_'+token;
+                stompClient.send("/app/add", {}, JSON.stringify({ 'replyTo': reply_To }));
+
+                stompClient.subscribe(reply_To, function(calResult){
+                    showResult(JSON.stringify(calResult.body));
+                });
+
                 stompClient.subscribe('/topic/showResult', function(calResult){
                 	showResult(JSON.stringify(calResult.body));
                 });
@@ -35,9 +43,13 @@
         }
 
         function sendNum() {
-            var num1 = document.getElementById('num1').value;
-            var num2 = document.getElementById('num2').value;
-            stompClient.send("/app/add", {}, JSON.stringify({ 'num1': num1, 'num2': num2 }));
+
+            var replyTo = document.getElementById('subscribeTo').value;
+            replyTo = '/queue/response_' + replyTo;
+            stompClient.send("/app/add", {}, JSON.stringify({ 'replyTo': replyTo}));
+            stompClient.subscribe(replyTo, function(calResult){
+                showResult(JSON.stringify(calResult.body));
+            });
         }
 
         function showResult(message) {
@@ -58,8 +70,7 @@
         <button id="disconnect" disabled="disabled" onclick="disconnect();">Disconnect</button><br/><br/>
     </div>
     <div id="calculationDiv">
-        <label>Number One:</label><input type="text" id="num1" /><br/>
-        <label>Number Two:</label><input type="text" id="num2" /><br/><br/>
+        <label>Subscribe To:</label><input type="text" id="subscribeTo" /><br/><br/>
         <button id="sendNum" onclick="sendNum();">Send to Add</button>
         <p id="calResponse"></p>
     </div>

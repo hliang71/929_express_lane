@@ -1,6 +1,6 @@
 package com.p2p.express.lane.example.vo;
 
-public class CalcInput {
+public class CalcInput extends Payload{
     private int num1;
     private int num2;
 	public int getNum1() {

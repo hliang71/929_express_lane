@@ -28,6 +28,7 @@ import com.p2p.express.lane.example.service.Trade.TradeAction;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeTypeUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +44,7 @@ public class TradeServiceImpl implements TradeService {
 	private final SimpMessageSendingOperations messagingTemplate;
 
 	private final PortfolioService portfolioService;
+	private volatile String replyTo;
 
 	private final List<TradeResult> tradeResults = new CopyOnWriteArrayList<>();
 
@@ -77,12 +79,11 @@ public class TradeServiceImpl implements TradeService {
 		this.tradeResults.add(new TradeResult(trade.getUsername(), newPosition));
 	}
 
-	@Scheduled(fixedDelay=1500)
+	@Scheduled(fixedDelay=15000)
 	public void sendTradeNotifications() {
 
 		Map<String, Object> map = new HashMap<>();
 		map.put(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON);
-
 		for (TradeResult result : this.tradeResults) {
 			if (System.currentTimeMillis() >= (result.timestamp + 1500)) {
 				logger.debug("Sending position update: " + result.position);
@@ -91,19 +92,24 @@ public class TradeServiceImpl implements TradeService {
 			}
 		}
 	}
-	@Scheduled(fixedDelay=1500)
+	@Scheduled(fixedDelay=5500)
 	public void sendGeoNotifications() {
+        if(!StringUtils.isEmpty(this.replyTo)) {
+			Map<String, Object> map = new HashMap<>();
+			map.put(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON);
+			GeoLocation loc = new GeoLocation();
+			loc.setId("120");
+			x += 0.01;
+			y += 0.01;
+			loc.setPositon_x(x);
+			loc.setPosition_y(y);this.messagingTemplate.convertAndSend(replyTo, loc, map);
+		}
 
-		Map<String, Object> map = new HashMap<>();
-		map.put(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON);
-		GeoLocation loc = new GeoLocation();
-		loc.setId("120");
-		x += 0.01;
-		y += 0.01;
-		loc.setPositon_x(x);
-		loc.setPosition_y(y);
-		this.messagingTemplate.convertAndSend("/topic/showResult", loc, map);
 
+	}
+	@Override
+	public void setReplyTo(String replyTo) {
+		this.replyTo = replyTo;
 	}
 
 	private static class TradeResult {

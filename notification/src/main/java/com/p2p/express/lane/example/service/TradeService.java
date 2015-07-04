@@ -19,5 +19,6 @@ package com.p2p.express.lane.example.service;
 public interface TradeService {
 
 	void executeTrade(Trade trade);
+	void setReplyTo(String replyTo);
 
 }

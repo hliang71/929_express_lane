@@ -54,6 +54,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return new CORSHeaderWriter(headers);*/
 		return new CORSHeaderWriter();
 	}
+	@Bean
+	public EnableAuthenticateHeaderWriter enableAuthenticateHeaderWriter() {
+		return new EnableAuthenticateHeaderWriter();
+	}
 
 
 	@Override
@@ -64,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			// See https://jira.springsource.org/browse/SPR-11496
 			.headers().addHeaderWriter(
 				new XFrameOptionsHeaderWriter(expressLaneAllowFromStrategy()
-						)).addHeaderWriter(cORSHeaderWriter())
+						)).addHeaderWriter(cORSHeaderWriter()).addHeaderWriter(enableAuthenticateHeaderWriter())
 				.and()
 
 			.formLogin()
@@ -79,7 +83,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
 				.and()
 			.authorizeRequests()
-				.antMatchers("/**/**").permitAll()
+				.antMatchers("/assets/**").permitAll()
+				.antMatchers("/add/**").permitAll()
 				.anyRequest().authenticated()
 				.and();
 	}
