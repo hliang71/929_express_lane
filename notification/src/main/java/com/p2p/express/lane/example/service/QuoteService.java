@@ -56,7 +56,7 @@ public class QuoteService implements ApplicationListener<BrokerAvailabilityEvent
 		this.brokerAvailable.set(event.isBrokerAvailable());
 	}
 
-	@Scheduled(fixedDelay=20000)
+	//@Scheduled(fixedDelay=20000)
 	public void sendQuotes() {
 		for (Quote quote : this.quoteGenerator.generateQuotes()) {
 			if (logger.isTraceEnabled()) {
