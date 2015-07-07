@@ -84,10 +84,13 @@ angular.module('controllers', [])
        var socket = new SockJS('http://localhost:8080/notification/add');
        stompClient = Stomp.over(socket);
        stompClient.connect({}, function(frame) {
-         //setConnected(true);
-         console.log('Connected: ' + frame);
-         stompClient.subscribe('/topic/showResult', function(calResult) {
-           console.log(JSON.stringify(calResult.body))
+         console.log('Connected: ' + reply_To);
+         var token = 'abc1234';
+         var reply_To = '/queue/response_'+token;
+         stompClient.send("/app/add", {}, JSON.stringify({ 'replyTo': reply_To }));
+         stompClient.subscribe(reply_To, function(calResult){
+           var obj = JSON.parse(JSON.parse(JSON.stringify(calResult)).body);
+           $scope.addMarker(obj.positon_x, obj.position_y)
          });
        });
      };
@@ -115,17 +118,16 @@ angular.module('controllers', [])
       content: 'loading'
     });
 
-    var x = 37.78721;
-    var y = -122.4109302;
-    $scope.addMarker = function() {
+    $scope.addMarker = function(x, y) {
       console.log('in the function addMarker');
       var json = {
-        id:123,
+        id:120,
         x: x,
         y: y,
         title: 'Location Name 2',
 
       };
+      console.log(json);
       var m = new google.maps.Marker({
         id: json.id,
         map:       google_map,
@@ -139,8 +141,6 @@ angular.module('controllers', [])
         info_window.open(google_map, this);
       });
       $scope.markers.push(m);
-      x = x + 0.001;
-      y = y + 0.001;
     };
 
     var setAllMap = function(map) {
